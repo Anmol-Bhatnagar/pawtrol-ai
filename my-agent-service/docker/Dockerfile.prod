@@ -1,0 +1,55 @@
+# Stage 1: Builder
+FROM python:3.11-slim AS builder
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    POETRY_VERSION=1.8.2 \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VIRTUALENVS_IN_PROJECT=true \
+    POETRY_NO_INTERACTION=1 \
+    PYSETUP_PATH="/opt/pysetup" \
+    VENV_PATH="/opt/pysetup/.venv"
+
+ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -sSL https://install.python-poetry.org | python3 -
+
+WORKDIR $PYSETUP_PATH
+COPY pyproject.toml ./
+# Install only main dependencies
+RUN poetry install --no-root --only main
+
+# Stage 2: Runtime
+FROM python:3.11-slim AS runtime
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    VENV_PATH="/opt/pysetup/.venv"
+ENV PATH="$VENV_PATH/bin:$PATH"
+
+# Create non-root user
+RUN groupadd -g 10001 appuser && \
+    useradd -r -u 10001 -g appuser appuser
+
+WORKDIR /app
+
+# Copy dependency environment from builder
+COPY --from=builder --chown=appuser:appuser $VENV_PATH $VENV_PATH
+
+# Copy application files
+COPY --chown=appuser:appuser src/ ./src/
+
+USER appuser
+
+EXPOSE 8000
+
+# Run Uvicorn directly
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
