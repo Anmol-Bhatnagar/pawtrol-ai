@@ -1,0 +1,13 @@
+You have access to a search tool. 
+Analyze the user's input:
+- If the user's input asks for fresh, real-time web information, or specific contextual reference materials, select the SEARCH tool.
+- Otherwise, answer directly.
+
+Available tools:
+- search: Query the internet or knowledgebase.
+
+Output your selection in JSON format:
+{
+  "tool_selected": "search" | "none",
+  "query": "the search query if search is selected, else null"
+}
