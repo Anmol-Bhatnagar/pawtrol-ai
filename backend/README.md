@@ -1,4 +1,4 @@
-# My Agent Service
+# Backend Agent Service
 
 An enterprise-ready AI Agent microservice template built on top of **FastAPI**, **LangGraph (LangChain)**, and **Pydantic**.
 
@@ -9,7 +9,7 @@ This project provides a clean, modular structure for orchestrating agent cogniti
 ## Project Structure
 
 ```text
-my-agent-service/
+backend/
 ├── .github/workflows/        # CI/CD pipelines (testing, linting, deployment)
 │   └── ci.yml
 ├── docker/                   # Dockerfiles
@@ -91,14 +91,14 @@ poetry run uvicorn src.app:app --reload
 
 ### Development Container
 ```bash
-docker build -f docker/Dockerfile.dev -t my-agent-service:dev .
-docker run -p 8000:8000 -v $(pwd):/app my-agent-service:dev
+docker build -f docker/Dockerfile.dev -t backend:dev .
+docker run -p 8000:8000 -v $(pwd):/app backend:dev
 ```
 
 ### Production Container (Lean Multi-Stage)
 ```bash
-docker build -f docker/Dockerfile.prod -t my-agent-service:latest .
-docker run -p 8000:8000 my-agent-service:latest
+docker build -f docker/Dockerfile.prod -t backend:latest .
+docker run -p 8000:8000 backend:latest
 ```
 
 ---

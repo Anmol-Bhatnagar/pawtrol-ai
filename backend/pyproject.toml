@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "my-agent-service"
+name = "backend"
 version = "0.1.0"
 description = "FastAPI and LangGraph-based enterprise agent service with Dog Breed Classifier"
 authors = ["Your Name <you@example.com>"]

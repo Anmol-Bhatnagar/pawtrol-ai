@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     LANGCHAIN_TRACING_V2: bool = False
     LANGCHAIN_ENDPOINT: str = "https://api.smith.langchain.com"
     LANGCHAIN_API_KEY: Optional[str] = None
-    LANGCHAIN_PROJECT: str = "my-agent-service"
+    LANGCHAIN_PROJECT: str = "backend"
 
     # Database & Integrations
     DATABASE_URL: str = "sqlite:///./sql_app.db"
